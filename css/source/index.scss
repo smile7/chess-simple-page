@@ -1,0 +1,413 @@
+/* ----- BASIC STYLES ----- */
+
+body {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 120px auto 50px;
+  grid-gap: 1em;
+
+  background-color: $light-gray;
+  box-sizing: border-box;
+  font-size: calc(1em + 0.1vw);
+  margin: 0;
+}
+
+header,
+main,
+footer {
+  display: grid;
+  grid-column: 1 / span 12;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.container {
+  display: flex;
+  grid-column: 2 / 12;
+  margin: auto;
+  max-width: $max-width;
+  width: 100%;
+}
+
+a, a:active, a:visited {
+  outline: none;
+  text-decoration: none;
+}
+
+%btn {
+  border: 1px solid $white;
+  border-radius: $border-radius;
+  color: $white;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1em;
+  outline: 0;
+  padding: .5rem .75rem;
+  text-align: center;
+  transition: all .3s ease-in-out;
+}
+
+.btn-primary {
+  @extend %btn;
+  background-color: transparent;
+
+  &:hover {
+    background-color: $main-color;
+  }
+}
+
+.btn-secondary {
+  @extend %btn;
+  background-color: $main-color;
+
+  &:hover {
+    background-color: $main-lighter;
+  }
+}
+
+/*
+  For MS support, every rule including grid should look like the following example:
+
+    display: -ms-grid;
+    -ms-grid-columns: 2fr 1fr 1fr;
+    -ms-grid-rows: 50px auto 50px;
+    -ms-grid-gap: 1em;
+  
+*/
+
+/* ----- END BASIC STYLES ----- */
+
+
+/* ----- HEADER ----- */
+
+header {
+  background-color: $dark-bg-color;
+  border-bottom: 1px solid $bg-color;
+  box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+  margin-bottom: 1rem;
+
+  .header-wrapper {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .logo {
+      margin-right: auto;
+
+      img {
+        width: 170px;
+        height: 100%;
+      }
+    }
+
+    .header-menu {
+      display: block;
+      margin-right: 1rem;
+
+      a {
+        padding: .5rem;
+        color: $main-lighter;
+        transition: color .3s ease-in-out;
+
+        &:hover, &.active {
+          color: $white;
+        }
+      }
+    }
+  }
+
+  a.btn-primary {
+    margin-right: $default-space;
+  }
+}
+
+/* ----- END HEADER ----- */
+
+
+/* ----- MAIN ----- */
+
+main {
+  align-content: start;
+
+  .main-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 50px auto 50px;
+    grid-gap: 1em;
+  }
+}
+
+%player {
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid darken($main-color, 30%);
+  border-radius: $border-radius;
+  box-shadow: 1px 1px 8px $dark-bg-color;
+  box-sizing: border-box;
+  color: $white;
+  display: flex;
+  max-width: $max-board-width;
+  width: 100%;
+
+  img {
+    border: 1px solid darken($main-color, 30%);
+    height: 48px;
+    margin-right: $default-space;
+    object-fit: cover;
+    width: 48px;
+  }
+
+  .player-name {
+    max-width: 250px;
+    overflow: hidden;
+  }
+
+  .rating {
+    color: $dark-bg-color;
+    font-style: italic;
+    margin-left: $default-space / 2;
+  }
+
+  .player-clock {
+    font-size: 24px;
+    margin-left: auto;
+    margin-right: $default-space;
+  }
+}
+
+.player1 {
+  @extend %player;
+  grid-row: 1 / 2;
+}
+.player2 {
+  @extend %player;
+  grid-row: 3 / 4;
+}
+
+/* -- CHESSBOARD -- */
+
+.chessboard {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: auto;
+  grid-row: 2 / 3;
+
+  border: 10px solid darken($main-color, 30%);
+  box-sizing: border-box;
+  max-width: $max-board-width;
+  width: 100%;
+  
+  .grid__item::before {
+      content: '';
+      display: block;
+      padding-top: 100%;
+  }
+
+  .grid__item {
+    background-color: $white;
+    &:nth-of-type(-2n+8), 
+    &:nth-of-type(8) ~ *:nth-of-type(-2n+15), 
+    &:nth-of-type(16) ~ *:nth-of-type(-2n+24), 
+    &:nth-of-type(24) ~ *:nth-of-type(-2n+31), 
+    &:nth-of-type(32) ~ *:nth-of-type(-2n+40), 
+    &:nth-of-type(40) ~ *:nth-of-type(-2n+47), 
+    &:nth-of-type(48) ~ *:nth-of-type(-2n+56), 
+    &:nth-of-type(56) ~ *:nth-of-type(-2n+63) {
+        background-color: $main-color;
+    }
+  }
+}
+
+/* -- END CHESSBOARD -- */
+
+/* -- GAME INFO -- */
+
+.game-info {
+  align-items: center;
+  background: $dark-alpha;
+  border: 2px solid $white;
+  border-radius: $border-radius;
+  display: flex;
+  flex-direction: column;
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+  justify-content: space-between;
+  min-height: 300px;
+  min-width: 330px;
+  overflow: auto;
+  position: relative;
+
+  .tabs {
+    color: $white;
+
+    .tab {
+      float: left;
+
+      &:first-of-type .tab-label {
+        border-right: none;
+      }
+
+      .tab-label {
+        background: $main-color;
+        cursor: pointer;
+        display: block;
+        line-height: 50px;
+        padding: 0 2*$default-space;
+        position: relative;
+        top: 0;
+        transition: $transition-all;
+      
+        &:hover {
+          top: -5px;
+          transition: top .3s;
+        }
+      }
+
+      .tab-content {
+        left: 0;
+        margin-top: $default-space;
+        max-height: 455px;
+        opacity: 0;
+        padding: $default-space;
+        position: absolute;
+        transition: $transition-all;
+      }
+    
+      .tab-switch {
+        display: none;
+      
+        &:checked + .tab-label {
+          background: $dark-alpha;
+          z-index: 1;
+          top: -2px;
+          text-decoration: underline;
+        }
+
+        &:checked + label + .tab-content {
+          opacity: 1;
+          z-index: 2;
+        }
+      }
+    }
+  }
+
+  .btn-secondary {
+    margin-bottom: $default-space;
+  }
+}
+
+/* -- END GAME INFO -- */
+
+.posts {
+  display: flex;
+  grid-column: 3 / 4;
+  grid-row: 2 / 3;
+  justify-content: center;
+}
+
+/* ----- END MAIN ----- */
+
+
+/* ----- FOOTER ----- */
+
+footer {
+  background-color: $dark-bg-color;
+  border-top: 1px solid $bg-color;
+  box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+  color: $white;
+  margin-top: 1rem;
+
+  .container {
+    justify-content: center;
+    font-size: 0.7em;
+    padding: .5em;
+  }
+}
+
+/* ----- END FOOTER ----- */
+
+
+/* ----- MEDIA QUERIES ----- */
+
+@media (max-width: 1200px) {
+  main .main-content {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 50px 1fr 50px auto;
+  }
+
+  .posts {
+    grid-column: 1 / span 2;
+    grid-row: 4 / 5;
+    margin-top: 2*$default-space;
+  }
+}
+
+@media (max-width: 992px) {
+  .game-info {
+    grid-column: 1 / 2;
+    grid-row: 4 / 5;
+    margin-top: 2*$default-space;
+  }
+  
+  .posts {
+    grid-column: 2 / 3;
+    grid-row: 4 / 5;
+  }
+
+  .chessboard, .player1, .player2 {
+    grid-column: 1 / span 2;
+    justify-self: center;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    grid-template-rows: 140px auto 50px;
+  }
+
+  main .main-content {
+    grid-template-rows: 50px 1fr 50px 1fr 1fr;
+  }
+
+  .game-info {
+    grid-column: 1 / span 2;
+  }
+
+  .posts {
+    grid-column: 1 / span 2;
+    grid-row: 5 / 6;
+  }
+}
+
+@media (max-width: 576px) {
+  body {
+    grid-template-rows: 220px auto 50px;
+  }
+
+  header .header-wrapper {
+    text-align: center;
+
+    .logo {
+      margin-right: initial;
+    }
+
+    .header-menu {
+      margin: $default-space 0;
+    }
+  }
+
+  .player-name {
+    max-width: 110px;
+  }
+
+  .game-info {
+    min-width: auto;
+    
+    .tabs .tab .tab-label {
+      padding: 0 $default-space;
+    }
+  }
+}
+
+/* ----- END MEDIA QUERIES ----- */
